@@ -1,15 +1,14 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
-import { View, Text, Pressable, TextInput, Alert } from 'react-native';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { View, Text, Pressable, TextInput } from 'react-native';
 import { useState } from 'react';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { toast } from 'utils/helpers';
 import useKeyboard from 'hooks/useKeyboard';
+import { toast } from 'utils/helpers';
 
 export default function LoginScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
   const isKeyboardUp = useKeyboard();
-  const navigation = useNavigation();
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -18,19 +17,18 @@ export default function LoginScreen() {
   };
 
   const proceedLogin = () => {
-    if (!username || !password) {
-      Alert.alert('Error', 'Username and Password are required');
-      return;
-    }
-    console.log({ username, password });
-    toast('Login Successful');
+    //if (!username || !password) {
+    //  toast('Campos usuário e senha obrigatórios', 'error');
+    //  return;
+    //} WARN:
+    navigation.navigate('Main')
   };
 
   return (
-    <View className='flex-1 justify-around items-center bg-marianblue p-6'>
+    <View className='flex-1 bg-gray-100 justify-around items-center p-6'>
 
       {!isKeyboardUp &&
-        <View className='flex justify-start w-full'>
+        <View className='flex justify-start w-full pt-32'>
           <View className='flex flex-col space-y-4'>
             <Text className='text-5xl text-pear font-semibold'>Vendas</Text>
             <Text className='text-5xl text-pear font-semibold'>App</Text>
@@ -42,7 +40,7 @@ export default function LoginScreen() {
 
         <View className='w-full'>
           <TextInput
-            className="rounded-md px-4 py-2"
+            className="rounded-md px-4 py-2 bg-white"
             placeholder="Usuário"
             value={username}
             onChangeText={setUsername}
@@ -52,7 +50,7 @@ export default function LoginScreen() {
 
         <View className='w-full pt-2'>
           <TextInput
-            className="rounded-md px-4 py-2"
+            className="rounded-md px-4 py-2 bg-white"
             placeholder="Senha"
             value={password}
             onChangeText={setPassword}
@@ -68,13 +66,13 @@ export default function LoginScreen() {
           <Text className='text-pear text-right'>Esqueceu a senha?</Text>
         </Pressable>
 
-        <View className="bg-pear rounded-md overflow-hidden">
+        <View className="rounded-md overflow-hidden">
           <Pressable
             onPress={proceedLogin}
             android_ripple={{ color: '#000' }}
             className="p-4"
           >
-            <Text className="text-night text-center font-bold">Submit</Text>
+            <Text className="text-center font-bold">Login</Text>
           </Pressable>
         </View>
 
