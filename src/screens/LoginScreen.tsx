@@ -7,77 +7,65 @@ import useKeyboard from 'hooks/useKeyboard';
 import { toast } from 'utils/helpers';
 
 export default function LoginScreen() {
-  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>()
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const isKeyboardUp = useKeyboard();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
 
-  const handleForgotPassword = () => {
-    console.log('Forgot password pressed');
-  };
+  const [credentials, setCredentials] = useState({
+    username: '',
+    password: ''
+  });
 
   const proceedLogin = () => {
-    //if (!username || !password) {
-    //  toast('Campos usuário e senha obrigatórios', 'error');
-    //  return;
-    //} WARN:
-    navigation.navigate('Main')
+    const { username, password } = credentials;
+    if (!username || !password) {
+      toast('Campos usuário e senha obrigatórios', 'error');
+      return;
+    }
+    navigation.navigate('Main');
   };
 
   return (
-    <View className='flex-1 bg-gray-100 justify-around items-center p-6'>
+    <View className="flex-1 bg-gray-100 justify-center items-center p-6">
 
       {!isKeyboardUp &&
-        <View className='flex justify-start w-full pt-32'>
-          <View className='flex flex-col space-y-4'>
-            <Text className='text-5xl text-pear font-semibold'>Vendas</Text>
-            <Text className='text-5xl text-pear font-semibold'>App</Text>
-          </View>
+        <View className="w-full mb-10">
+          <Text className="text-6xl font-bold text-black">Vendas App</Text>
         </View>
       }
 
-      <View className='w-full'>
+      <View className="w-full space-y-4">
 
-        <View className='w-full'>
-          <TextInput
-            className="rounded-md px-4 py-2 bg-white"
-            placeholder="Usuário"
-            value={username}
-            onChangeText={setUsername}
-            cursorColor={'#000'}
-          />
-        </View>
+        <TextInput
+          className="rounded-lg px-4 py-3 bg-white border border-gray-300 text-black"
+          placeholder="Usuário"
+          value={credentials.username}
+          onChangeText={(username) => setCredentials({ ...credentials, username })}
+          cursorColor={'#000'}
+          placeholderTextColor="#7e7e7e"
+        />
 
-        <View className='w-full pt-2'>
-          <TextInput
-            className="rounded-md px-4 py-2 bg-white"
-            placeholder="Senha"
-            value={password}
-            onChangeText={setPassword}
-            cursorColor={'#000'}
-            secureTextEntry
-          />
-        </View>
+        <TextInput
+          className="rounded-lg px-4 py-3 bg-white border border-gray-300 text-black"
+          placeholder="Senha"
+          value={credentials.password}
+          onChangeText={(password) => setCredentials({ ...credentials, password })}
+          cursorColor={'#000'}
+          secureTextEntry
+          placeholderTextColor="#7e7e7e"
+        />
 
-        <Pressable
-          onPress={handleForgotPassword}
-          className='pb-6 pt-2'
-        >
-          <Text className='text-pear text-right'>Esqueceu a senha?</Text>
+        <Pressable onPress={() => console.log('Forgot password pressed')} className="mt-2">
+          <Text className="text-right text-sm text-gray-500">Esqueceu a senha?</Text>
         </Pressable>
 
-        <View className="rounded-md overflow-hidden">
-          <Pressable
-            onPress={proceedLogin}
-            android_ripple={{ color: '#000' }}
-            className="p-4"
-          >
-            <Text className="text-center font-bold">Login</Text>
-          </Pressable>
-        </View>
-
+        <Pressable
+          onPress={proceedLogin}
+          className="mt-6 rounded-lg bg-black p-4"
+          android_ripple={{ color: '#444' }}
+        >
+          <Text className="text-center text-white font-semibold">Login</Text>
+        </Pressable>
       </View>
-
     </View>
   );
 }
