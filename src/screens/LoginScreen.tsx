@@ -16,11 +16,11 @@ export default function LoginScreen() {
   });
 
   const proceedLogin = () => {
-    const { username, password } = credentials;
-    if (!username || !password) {
-      toast('Campos usuário e senha obrigatórios', 'error');
-      return;
-    }
+    //const { username, password } = credentials;
+    //if (!username || !password) {
+    //  toast('Campos usuário e senha obrigatórios', 'error');
+    //  return;
+    //}
     navigation.navigate('Main');
   };
 
