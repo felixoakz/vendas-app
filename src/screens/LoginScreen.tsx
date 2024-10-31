@@ -2,26 +2,44 @@ import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { View, Text, Pressable, TextInput } from 'react-native';
 import { useState } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import * as SecureStore from 'expo-secure-store';
 
 import useKeyboard from 'hooks/useKeyboard';
 import { toast } from 'utils/helpers';
+import { loginApi } from 'api/config';
 
 export default function LoginScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const isKeyboardUp = useKeyboard();
 
   const [credentials, setCredentials] = useState({
-    username: '',
+    email: '',
     password: ''
   });
 
-  const proceedLogin = () => {
-    //const { username, password } = credentials;
-    //if (!username || !password) {
-    //  toast('Campos usuário e senha obrigatórios', 'error');
-    //  return;
-    //}
-    navigation.navigate('Main');
+  const proceedLogin = async () => {
+    const { email , password } = credentials;
+
+    if (!email || !password) {
+      toast('Campos usuário e senha obrigatórios', 'error');
+      return;
+    }
+
+    const deviceName = 'xiaomi'
+
+    try {
+      const response = await loginApi({ email, password, deviceName });
+
+      const { token } = response.data;
+      await SecureStore.setItemAsync('authToken', token);
+
+      navigation.navigate('Main');
+
+    } catch (e) {
+      console.log({e})
+
+      //FIX: corrigir validacao em caso de email/senha errada
+    }
   };
 
   return (
@@ -37,9 +55,9 @@ export default function LoginScreen() {
 
         <TextInput
           className="rounded-lg px-4 py-3 bg-white border border-gray-300 text-black"
-          placeholder="Usuário"
-          value={credentials.username}
-          onChangeText={(username) => setCredentials({ ...credentials, username })}
+          placeholder="Email"
+          value={credentials.email}
+          onChangeText={(email) => setCredentials({ ...credentials, email: email })}
           cursorColor={'#000'}
           placeholderTextColor="#7e7e7e"
         />
